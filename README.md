@@ -1,15 +1,11 @@
-Got it! Here's a tailored `README.md` for your **Journal App** built using **Spring Boot REST API**, based on the structure in your screenshot:
-
----
-
-### 📄 `README.md`
+###  `README.md`
 
 ```markdown
-# 📝 Journal Application
+#  Journal Application
 
 A simple Journal Application built using **Spring Boot** that provides a RESTful API to manage journal entries.
 
-## 🚀 Features
+## Features
 
 - View all journal entries
 - Add new journal entries
@@ -17,14 +13,14 @@ A simple Journal Application built using **Spring Boot** that provides a RESTful
 - Data handled via REST API (JSON)
 - Easily extensible and ready for database integration
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 - Java 17+
 - Spring Boot
 - Spring Web (REST)
 - Maven
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 
@@ -41,7 +37,7 @@ src
 
 ````
 
-## 📌 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint                | Description                      |
 |--------|-------------------------|----------------------------------|
@@ -51,7 +47,7 @@ src
 
 > Request and response formats are JSON-based.
 
-## 📦 Sample `JournalData` JSON
+##  Sample `JournalData` JSON
 
 ```json
 {
@@ -61,7 +57,7 @@ src
 }
 ````
 
-## 🧪 How to Run
+##  How to Run
 
 ### Prerequisites
 
@@ -82,7 +78,7 @@ cd Journal
 mvn spring-boot:run
 ```
 
-## 🌐 Future Improvements
+##  Future Improvements
 
 * Integrate with a database (e.g., H2, MySQL)
 * Add delete endpoint
