@@ -31,7 +31,6 @@ public class JournalEntryControllerV2 {
             return new ResponseEntity<>(allEntries, HttpStatus.OK);
         } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
     //get journal by ID
     @GetMapping("/id/{myId}")
     public ResponseEntity<JournalEntry> findById(@PathVariable ObjectId myId) {
