@@ -1,6 +1,7 @@
-package com.newProjectSpring.Journal.Entity;
+package com.karna.ankur.Journal.Entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Document(collection = "journal_user")
 @Data
+@NoArgsConstructor
 public class UserEntity {
 
     @Id
@@ -23,6 +25,7 @@ public class UserEntity {
     @NonNull
     private String password;
     @DBRef
-    List<JournalEntry> journalEntries = new ArrayList<>();
+    private List<JournalEntry> journalEntries = new ArrayList<>();
+    private List<String> roles;
 
 }

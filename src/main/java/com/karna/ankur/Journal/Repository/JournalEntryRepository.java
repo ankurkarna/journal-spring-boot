@@ -1,6 +1,6 @@
-package com.newProjectSpring.Journal.Repository;
+package com.karna.ankur.Journal.Repository;
 
-import com.newProjectSpring.Journal.Entity.JournalEntry;
+import com.karna.ankur.Journal.Entity.JournalEntry;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

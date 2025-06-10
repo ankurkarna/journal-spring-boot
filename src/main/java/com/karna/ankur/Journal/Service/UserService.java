@@ -1,9 +1,11 @@
-package com.newProjectSpring.Journal.Service;
+package com.karna.ankur.Journal.Service;
 
-import com.newProjectSpring.Journal.Entity.UserEntity;
-import com.newProjectSpring.Journal.Repository.UserRepository;
+import com.karna.ankur.Journal.Entity.UserEntity;
+import com.karna.ankur.Journal.Repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +18,15 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public void saveEntries(UserEntity userEntity) {
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public void saveUser(UserEntity userEntity) {
+        userRepository.save(userEntity);
+
+    }
+    public void saveNewUser(UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setRoles(List.of("USER"));
         userRepository.save(userEntity);
     }
 
