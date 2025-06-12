@@ -1,0 +1,14 @@
+spring:
+  profiles:
+   active: dev
+
+
+#logging:
+#  level:
+#    com:
+#      karna:
+#        ankur:
+#          Journal: TRACE
+#logging:
+#  level:
+#    root: ERROR

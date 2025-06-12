@@ -16,18 +16,18 @@ import java.util.Optional;
 public class JournalEntryService {
     @Autowired
     JournalEntryRepository journalEntryRepository;
-//    JournalEntryService journalEntryService;
+    //    JournalEntryService journalEntryService;
     @Autowired
     private UserService userService;
 
     @Transactional
-    public void saveEntries(JournalEntry journalEntryModel, String userName){
+    public void saveEntry(JournalEntry journalEntryModel, String userName) {
         try {
-        UserEntity user = userService.findByUserName(userName);
-        journalEntryModel.setDate(LocalDateTime.now());
-        JournalEntry saved = journalEntryRepository.save(journalEntryModel);
-        user.getJournalEntries().add(saved);
-        userService.saveUser(user);
+            UserEntity user = userService.findByUserName(userName);
+            journalEntryModel.setDate(LocalDateTime.now());
+            JournalEntry saved = journalEntryRepository.save(journalEntryModel);
+            user.getJournalEntries().add(saved);
+            userService.saveUser(user);
 
         } catch (Exception e) {
             System.out.println("save method failed due to some internal error");
@@ -36,24 +36,34 @@ public class JournalEntryService {
     }
 
     //overloaded the save entry method to use in put method as currently we do not required username parameter
-    public void saveEntries(JournalEntry journalEntryModel){
+    public void saveEntry(JournalEntry journalEntryModel) {
         journalEntryModel.setDate(LocalDateTime.now());
-      journalEntryRepository.save(journalEntryModel);
+        journalEntryRepository.save(journalEntryModel);
     }
 
-    public List<JournalEntry> getAllEntries(){
+    public List<JournalEntry> getAllEntries() {
         return journalEntryRepository.findAll();
     }
 
-    public Optional<JournalEntry> getEntryById(ObjectId id){
+    public Optional<JournalEntry> getEntryById(ObjectId id) {
         return journalEntryRepository.findById(id);
     }
 
-    public void deleteJournalById(ObjectId id, String userName){
-        UserEntity user = userService.findByUserName(userName);
-        user.getJournalEntries().removeIf(x->x.getId().equals(id));
-        userService.saveNewUser(user);
-        journalEntryRepository.deleteById(id);
+    @Transactional
+    public void deleteJournalById(ObjectId id, String userName) {
+        try {
+            UserEntity user = userService.findByUserName(userName);
+            boolean removed = user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+            if (removed) {
+                userService.saveUser(user);
+                journalEntryRepository.deleteById(id);
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new RuntimeException("error occurred while trying to delete entry");
+        }
     }
 
 //    public List<JournalEntry> findByUserName(String userName){
