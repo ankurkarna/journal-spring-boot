@@ -27,11 +27,9 @@
         <url/>
     </scm>
     <properties>
+        <sonar.organization>ankur-karna</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <java.version>17</java.version>
-        <properties>
-            <sonar.organization>ankur-karna</sonar.organization>
-            <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        </properties>
     </properties>
     <dependencies>
 
@@ -65,11 +63,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -77,12 +70,6 @@
             <version>3.3.3</version>
 
         </dependency>
-        <dependency>
-            <groupId>org.ingini.mongodb</groupId>
-            <artifactId>mongo-testbed</artifactId>
-            <version>0.0.4</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -95,9 +82,7 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version> 3.9.1.2184</version>
-<!-- cmd to run sqube in IDE:  mvn clean verify sonar:sonar "-Dsonar.projectKey=JournalApp" "-Dsonar.host.url=http://localhost:9000" "-Dsonar.login=sqp_1901ed4bdac89e4696b17d9046b855806c6a47b1"-->
-
+                <version>3.9.1.2184</version>
             </plugin>
         </plugins>
     </build>
