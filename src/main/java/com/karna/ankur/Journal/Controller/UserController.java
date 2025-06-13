@@ -3,12 +3,15 @@ package com.karna.ankur.Journal.Controller;
 import com.karna.ankur.Journal.Entity.UserEntity;
 import com.karna.ankur.Journal.Repository.UserRepository;
 import com.karna.ankur.Journal.Service.UserService;
+import com.karna.ankur.Journal.Service.WeatherService;
+import com.karna.ankur.Journal.api.response.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/user")
@@ -20,6 +23,11 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    WeatherService weatherService;
+
+    @Autowired
+    RestTemplate restTemplate;
 //    @GetMapping
 //    public ResponseEntity<?> getUser() {
 //        List<UserEntity> userEntities = userService.getAllEntries();
@@ -47,6 +55,17 @@ public class UserController {
 //        }
 //    }
 
+@GetMapping
+public ResponseEntity<?> greeting(){
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    WeatherResponse weatherResponse = weatherService.getWeather("New Delhi");
+    String greeting = "";
+    if (weatherResponse != null){
+        greeting = ", Weather feels like "+weatherResponse.getCurrent().getFeelslike();
+    }
+    return new ResponseEntity<>("Hi " + authentication.getName() + greeting,HttpStatus.OK);
+
+}
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody UserEntity userEntity) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
