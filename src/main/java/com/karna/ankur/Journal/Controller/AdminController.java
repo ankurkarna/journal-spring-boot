@@ -2,6 +2,7 @@ package com.karna.ankur.Journal.Controller;
 
 import com.karna.ankur.Journal.Entity.UserEntity;
 import com.karna.ankur.Journal.Service.UserService;
+import com.karna.ankur.Journal.cache.AppCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AppCache appCache;
+
     @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers(){
         List<UserEntity> allEntries = userService.getAllEntries();
@@ -30,5 +34,10 @@ public class AdminController {
     @PostMapping("/create-admin-user")
     public void createAdminUser(@RequestBody UserEntity userEntity){
         userService.saveAdmin(userEntity);
+    }
+
+    @GetMapping("/clear-app-cache")
+    public void clearCache(){
+        appCache.init();
     }
 }

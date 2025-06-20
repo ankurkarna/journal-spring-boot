@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.when;
 
+
 public class UserDetailsServiceImplTests {
 
     @InjectMocks
