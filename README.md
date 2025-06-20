@@ -1,6 +1,3 @@
-###  `README.md`
-
-```markdown
 #  Journal Application
 
 A simple Journal Application built using **Spring Boot** that provides a RESTful API to manage journal entries.
