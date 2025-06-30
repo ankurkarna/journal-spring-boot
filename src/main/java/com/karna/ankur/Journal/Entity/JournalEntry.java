@@ -9,7 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Document(collection = "journal_entries")
 @Data
@@ -25,8 +25,13 @@ public class JournalEntry {
     private LocalDateTime date;
     private Sentiment sentiment;
 
-//    public static void main(String[] args) {
-//        JournalEntry o = new JournalEntry()
-//
-//    }
+    @JsonProperty("stringId")
+    public String getStringId() {
+        return id != null ? id.toString() : null;
+    }
+
+    // public static void main(String[] args) {
+    // JournalEntry o = new JournalEntry()
+    //
+    // }
 }
