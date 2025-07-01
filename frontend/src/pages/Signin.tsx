@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signin: React.FC = () => {
   const navigate = useNavigate();
@@ -7,6 +8,8 @@ const Signin: React.FC = () => {
     userName: "",
     password: "",
   });
+
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,15 +28,11 @@ const Signin: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:8080/public/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
+      const res = await axios.post(`${API_BASE}/public/signin`, credentials);
 
-      const data = await res.text();
+      const data = res.data;
 
-      if (res.ok) {
+      if (res.status === 200) {
         const token = data.replace("JWT Token: ", "").trim();
         localStorage.setItem("token", token);
         //         alert("Signin successful");

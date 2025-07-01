@@ -10,6 +10,8 @@ const Signup: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const API_BASE = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -21,7 +23,7 @@ const Signup: React.FC = () => {
         sentimentAnalysis,
       };
 
-      await axios.post("http://localhost:8080/public/signup", payload, {
+      await axios.post(`${API_BASE}/public/signup`, payload, {
         headers: {
           "Content-Type": "application/json",
         },
