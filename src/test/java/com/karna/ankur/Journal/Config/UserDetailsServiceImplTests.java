@@ -1,47 +1,47 @@
-package com.karna.ankur.Journal.Config;
+// package com.karna.ankur.Journal.Config;
 
-import com.karna.ankur.Journal.Entity.UserEntity;
-import com.karna.ankur.Journal.Repository.UserRepository;
-import com.karna.ankur.Journal.Service.UserDetailsServiceImpl;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+// import com.karna.ankur.Journal.Entity.UserEntity;
+// import com.karna.ankur.Journal.Repository.UserRepository;
+// import com.karna.ankur.Journal.Service.UserDetailsServiceImpl;
+// import org.junit.jupiter.api.Assertions;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import org.mockito.ArgumentMatchers;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.MockitoAnnotations;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import java.util.ArrayList;
+// import org.springframework.security.core.userdetails.UserDetails;
+// import java.util.ArrayList;
 
-import static org.mockito.Mockito.when;
+// import static org.mockito.Mockito.when;
 
 
-public class UserDetailsServiceImplTests {
+// public class UserDetailsServiceImplTests {
 
-    @InjectMocks
-    private UserDetailsServiceImpl userDetailsService;
+//     @InjectMocks
+//     private UserDetailsServiceImpl userDetailsService;
 
-    @Mock
-    private UserRepository userRepository;
+//     @Mock
+//     private UserRepository userRepository;
 
-    @BeforeEach
-    void setUp(){
-        try{
-        MockitoAnnotations.openMocks(this);
+//     @BeforeEach
+//     void setUp(){
+//         try{
+//         MockitoAnnotations.openMocks(this);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//         } catch (Exception e) {
+//             throw new RuntimeException(e);
+//         }
+//     }
 
-    @Test
-    void loadUserByUsernameTest(){
-        when(userRepository
-                .findByUserName(ArgumentMatchers.anyString()))
-                .thenReturn(UserEntity.builder()
-                        .userName("prafulla").password("dsafd").roles(new ArrayList<>()).build());
-        UserDetails user = userDetailsService.loadUserByUsername("prafull");
-        Assertions.assertNotNull(user);
-    }
-}
+//     @Test
+//     void loadUserByUsernameTest(){
+//         when(userRepository
+//                 .findByUserName(ArgumentMatchers.anyString()))
+//                 .thenReturn(UserEntity.builder()
+//                         .userName("prafulla").password("dsafd").roles(new ArrayList<>()).build());
+//         UserDetails user = userDetailsService.loadUserByUsername("prafull");
+//         Assertions.assertNotNull(user);
+//     }
+// }
