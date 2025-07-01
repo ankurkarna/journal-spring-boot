@@ -1,11 +1,10 @@
 // src/pages/Home.tsx
 
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 import "./Home.css";
 
 const Home = () => {
-  // No redirect logic here; homepage is always accessible
+  // Homepage is always accessible
   return (
     <div className="min-h-screen bg-gradient-to-tr from-indigo-100 to-white flex flex-col">
       {/* Header */}
