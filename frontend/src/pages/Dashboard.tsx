@@ -25,6 +25,32 @@ function decodeJWT(token: string | null): any {
   }
 }
 
+// Daily quotes/affirmations
+const QUOTES = [
+  "You are enough. You have enough. You do enough.",
+  "Every day is a fresh start.",
+  "Small steps every day lead to big changes.",
+  "You are stronger than you think.",
+  "Gratitude turns what we have into enough.",
+  "Your story matters.",
+  "Be gentle with yourself.",
+];
+
+// Mood options
+const MOODS = [
+  { emoji: "😃", label: "Happy" },
+  { emoji: "😐", label: "Neutral" },
+  { emoji: "😔", label: "Sad" },
+  { emoji: "😰", label: "Anxious" },
+  { emoji: "🤔", label: "Thoughtful" },
+  { emoji: "😴", label: "Tired" },
+];
+
+function getTodayKey(key: string) {
+  const today = new Date().toISOString().slice(0, 10);
+  return `${key}_${today}`;
+}
+
 const Dashboard: React.FC = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [activeTab, setActiveTab] = useState("entries");
@@ -35,6 +61,9 @@ const Dashboard: React.FC = () => {
   const [editSentiment, setEditSentiment] = useState("NEUTRAL");
   const [isSaving, setIsSaving] = useState(false);
   const [greeting, setGreeting] = useState("");
+  const [todayMood, setTodayMood] = useState<string | null>(null);
+  const [streak, setStreak] = useState<number>(0);
+  const [showConfetti, setShowConfetti] = useState(false);
   const navigate = useNavigate();
 
   const fetchEntries = async (token: string) => {
@@ -43,12 +72,15 @@ const Dashboard: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEntries(res.data || []);
+      return res.data || [];
     } catch (err: any) {
       console.error(err);
       if (err.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/signin");
       }
+      setIsLoading(false);
+      return [];
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +90,55 @@ const Dashboard: React.FC = () => {
   const token = localStorage.getItem("token");
   const decoded = decodeJWT(token);
   const username = decoded?.sub || "User";
+
+  // Daily quote logic
+  const quoteOfTheDay = QUOTES[new Date().getDate() % QUOTES.length];
+
+  // Mood tracker logic
+  useEffect(() => {
+    const mood = localStorage.getItem(getTodayKey("mood"));
+    if (mood) setTodayMood(mood);
+  }, []);
+
+  const handleMoodSelect = (mood: string) => {
+    setTodayMood(mood);
+    localStorage.setItem(getTodayKey("mood"), mood);
+  };
+
+  // Streak logic
+  useEffect(() => {
+    const lastEntryDate = localStorage.getItem("lastEntryDate");
+    const streakCount = parseInt(localStorage.getItem("streak") || "0", 10);
+    const today = new Date().toISOString().slice(0, 10);
+    if (entries.length > 0) {
+      // Find the latest entry date
+      const latest = entries
+        .map((e) => new Date(e.date).toISOString().slice(0, 10))
+        .sort()
+        .pop();
+      if (latest) {
+        if (lastEntryDate === today) {
+          setStreak(streakCount);
+        } else if (
+          lastEntryDate &&
+          latest === today &&
+          new Date(today).getTime() - new Date(lastEntryDate).getTime() ===
+            86400000
+        ) {
+          // Consecutive day
+          setStreak(streakCount + 1);
+          localStorage.setItem("streak", String(streakCount + 1));
+          setShowConfetti([3, 7, 30].includes(streakCount + 1));
+        } else if (latest === today) {
+          // New streak
+          setStreak(1);
+          localStorage.setItem("streak", "1");
+          setShowConfetti(true);
+        }
+        localStorage.setItem("lastEntryDate", latest);
+      }
+    }
+  }, [entries]);
 
   useEffect(() => {
     if (!token) {
@@ -111,7 +192,17 @@ const Dashboard: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      await fetchEntries(token);
+      const newEntries = await fetchEntries(token);
+      if (newEntries.length > 0) {
+        const sorted = [...newEntries].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        const newEntry = sorted[0];
+        setEditingEntry(newEntry);
+        setEditTitle(newEntry.title);
+        setEditContent(newEntry.content);
+        setEditSentiment(newEntry.sentiment);
+      }
     } catch (err) {
       console.error("Quick Add Error:", err);
     } finally {
@@ -146,41 +237,53 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
+      {/* Confetti celebration for streaks */}
+      {showConfetti && (
+        <div className="fixed inset-0 z-50 pointer-events-none flex items-start justify-center mt-20 animate-fadeIn">
+          <span className="text-5xl">🎉</span>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white shadow-sm p-4">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full">
+            <span
+              className="flex items-center justify-center mr-3"
+              style={{ width: 32, height: 32 }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 48 48"
-                className="w-8 h-8"
+                viewBox="0 0 32 32"
+                width={32}
+                height={32}
+                className="block"
               >
                 <rect
-                  x="8"
-                  y="8"
-                  width="32"
-                  height="32"
-                  rx="6"
+                  x="4"
+                  y="4"
+                  width="24"
+                  height="24"
+                  rx="5"
                   fill="#fbbf24"
                 />
-                <rect x="14" y="14" width="20" height="20" rx="2" fill="#fff" />
+                <rect x="9" y="9" width="14" height="14" rx="2" fill="#fff" />
                 <path
-                  d="M18 18h12M18 22h12M18 26h8"
+                  d="M12 13h8M12 16h8M12 19h5"
                   stroke="#6366f1"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                 />
                 <rect
-                  x="28"
-                  y="28"
-                  width="6"
-                  height="6"
+                  x="19"
+                  y="19"
+                  width="4"
+                  height="4"
                   rx="1"
                   fill="#fbbf24"
                   stroke="#6366f1"
-                  strokeWidth="1.5"
+                  strokeWidth="1"
                 />
               </svg>
             </span>
@@ -194,9 +297,13 @@ const Dashboard: React.FC = () => {
               <div className="text-xs text-gray-500 font-medium mt-1">
                 Your mind. Your words. Your space.
               </div>
-              {/* Weather info below tagline */}
-              {greeting && (
-                <div className="text-xs text-blue-500 mt-1">{greeting}</div>
+              {/* Weather and quote combined, minimal */}
+              {(greeting || quoteOfTheDay) && (
+                <div className="text-xs text-gray-400 mt-2">
+                  {greeting}
+                  {greeting && quoteOfTheDay && <span className="mx-2">·</span>}
+                  {quoteOfTheDay}
+                </div>
               )}
             </div>
           </div>
@@ -227,6 +334,37 @@ const Dashboard: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* Mood Tracker */}
+      <div className="max-w-6xl mx-auto px-4 mt-4 flex justify-end">
+        <div className="bg-white rounded-lg shadow p-3 flex items-center space-x-2">
+          <span className="text-sm text-gray-500">
+            How are you feeling today?
+          </span>
+          {MOODS.map((m) => (
+            <button
+              key={m.label}
+              className={`text-2xl px-1 focus:outline-none ${
+                todayMood === m.emoji ? "ring-2 ring-indigo-400 rounded" : ""
+              }`}
+              onClick={() => handleMoodSelect(m.emoji)}
+              aria-label={m.label}
+            >
+              {m.emoji}
+            </button>
+          ))}
+          {todayMood && <span className="ml-2 text-lg">{todayMood}</span>}
+        </div>
+      </div>
+
+      {/* Streak badge */}
+      {streak > 1 && (
+        <div className="max-w-6xl mx-auto px-4 mt-2 flex justify-end">
+          <div className="bg-green-100 text-green-700 rounded-full px-4 py-1 text-sm font-semibold shadow inline-flex items-center">
+            🔥 {streak} day streak!
+          </div>
+        </div>
+      )}
 
       {/* Layout */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
@@ -323,32 +461,17 @@ const Dashboard: React.FC = () => {
                             `http://localhost:8080/journal/id/${getEntryId(
                               entry
                             )}`,
-                            {
-                              headers: { Authorization: `Bearer ${token}` },
-                            }
+                            { headers: { Authorization: `Bearer ${token}` } }
                           );
                           await fetchEntries(token);
                         } catch (err) {
-                          console.error("Delete Error:", err);
+                          console.error("Error deleting entry:", err);
                         } finally {
                           setIsLoading(false);
                         }
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
+                      Delete
                     </button>
                     <h4 className="font-semibold">{entry.title}</h4>
                     <p className="text-sm text-gray-600">{entry.content}</p>
@@ -401,7 +524,6 @@ const Dashboard: React.FC = () => {
                 if (!token) return;
                 setIsSaving(true);
                 try {
-                  console.log("editingEntry before save:", editingEntry);
                   const entryId = getEntryId(editingEntry);
                   await axios.put(
                     `http://localhost:8080/journal/id/${entryId}`,
