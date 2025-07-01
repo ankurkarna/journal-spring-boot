@@ -1,14 +1,14 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://ankurkarna:xV4s5CCSJJQEjnQz@cluster0.ih67exj.mongodb.net/journaldb?retryWrites=true&w=majority&appName=Cluster0
+      uri: ${MONGODB_URI}
       auto-index-creation: true
 
     redis:
-      host: redis-19372.c212.ap-south-1-1.ec2.redns.redis-cloud.com
-      port: 19372
-      username: default
-      password: 0zFzgb2c2j9ARV2RAeMYnE9xEWfcrvBt
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
 
   application:
     name: Journal
@@ -32,8 +32,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ankurkarna0100@gmail.com
-    password: iwwp hsxz eefw tjjo
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:

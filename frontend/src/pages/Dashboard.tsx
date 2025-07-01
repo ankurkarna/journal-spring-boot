@@ -51,6 +51,8 @@ function getTodayKey(key: string) {
   return `${key}_${today}`;
 }
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 const Dashboard: React.FC = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [activeTab, setActiveTab] = useState("entries");
@@ -68,7 +70,7 @@ const Dashboard: React.FC = () => {
 
   const fetchEntries = async (token: string) => {
     try {
-      const res = await axios.get("http://localhost:8080/journal", {
+      const res = await axios.get(`${API_BASE}/journal`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEntries(res.data || []);
@@ -148,7 +150,7 @@ const Dashboard: React.FC = () => {
     fetchEntries(token);
     // Fetch greeting (with weather)
     axios
-      .get("http://localhost:8080/user", {
+      .get(`${API_BASE}/user`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setGreeting(res.data))
@@ -186,7 +188,7 @@ const Dashboard: React.FC = () => {
     try {
       setIsLoading(true);
       await axios.post(
-        "http://localhost:8080/journal",
+        `${API_BASE}/journal`,
         { title, content, sentiment },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -221,7 +223,7 @@ const Dashboard: React.FC = () => {
     try {
       setIsLoading(true);
       await axios.post(
-        "http://localhost:8080/journal",
+        `${API_BASE}/journal`,
         { title, content, sentiment },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -458,9 +460,7 @@ const Dashboard: React.FC = () => {
                         setIsLoading(true);
                         try {
                           await axios.delete(
-                            `http://localhost:8080/journal/id/${getEntryId(
-                              entry
-                            )}`,
+                            `${API_BASE}/journal/id/${getEntryId(entry)}`,
                             { headers: { Authorization: `Bearer ${token}` } }
                           );
                           await fetchEntries(token);
@@ -526,7 +526,7 @@ const Dashboard: React.FC = () => {
                 try {
                   const entryId = getEntryId(editingEntry);
                   await axios.put(
-                    `http://localhost:8080/journal/id/${entryId}`,
+                    `${API_BASE}/journal/id/${entryId}`,
                     {
                       title: editTitle,
                       content: editContent,

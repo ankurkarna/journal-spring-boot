@@ -4,7 +4,7 @@ spring:
 
 weather:
   api:
-    key: ec3c3be61ae9e833ea3f7d679382da38
+    key: ${WEATHER_API_KEY}
 #logging:
 #  level:
 #    com:
