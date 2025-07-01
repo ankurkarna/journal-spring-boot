@@ -5,7 +5,6 @@ import com.karna.ankur.Journal.Entity.UserEntity;
 import com.karna.ankur.Journal.Repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

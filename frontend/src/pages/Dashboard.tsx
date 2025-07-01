@@ -15,6 +15,16 @@ interface Entry {
 // Now uses entry.stringId provided by the backend
 const getEntryId = (entry: any) => entry.stringId;
 
+function decodeJWT(token: string | null): any {
+  if (!token) return null;
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+}
+
 const Dashboard: React.FC = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [activeTab, setActiveTab] = useState("entries");
@@ -24,6 +34,7 @@ const Dashboard: React.FC = () => {
   const [editContent, setEditContent] = useState("");
   const [editSentiment, setEditSentiment] = useState("NEUTRAL");
   const [isSaving, setIsSaving] = useState(false);
+  const [greeting, setGreeting] = useState("");
   const navigate = useNavigate();
 
   const fetchEntries = async (token: string) => {
@@ -43,13 +54,24 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  // Get username from token
+  const token = localStorage.getItem("token");
+  const decoded = decodeJWT(token);
+  const username = decoded?.sub || "User";
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) {
       navigate("/signin");
       return;
     }
     fetchEntries(token);
+    // Fetch greeting (with weather)
+    axios
+      .get("http://localhost:8080/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setGreeting(res.data))
+      .catch(() => setGreeting(""));
   }, []);
 
   const handleAddEntryByType = async (
@@ -172,17 +194,27 @@ const Dashboard: React.FC = () => {
               <div className="text-xs text-gray-500 font-medium mt-1">
                 Your mind. Your words. Your space.
               </div>
+              {/* Weather info below tagline */}
+              {greeting && (
+                <div className="text-xs text-blue-500 mt-1">{greeting}</div>
+              )}
             </div>
           </div>
-          <button
-            onClick={() => {
-              localStorage.removeItem("token");
-              navigate("/signin");
-            }}
-            className="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
-          >
-            Logout
-          </button>
+          <div className="flex items-center space-x-3">
+            {/* Username display */}
+            <span className="text-gray-600 text-sm pr-3 border-r border-gray-300">
+              {username}
+            </span>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/signin");
+              }}
+              className="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </header>
 

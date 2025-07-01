@@ -1,7 +1,6 @@
 package com.karna.ankur.Journal.Scheduler;
 
 import com.karna.ankur.Journal.Entity.JournalEntry;
-import com.karna.ankur.Journal.Entity.SentimentMessage;
 import com.karna.ankur.Journal.Entity.UserEntity;
 import com.karna.ankur.Journal.Repository.UserRepositoryImpl;
 import com.karna.ankur.Journal.Service.EmailService;

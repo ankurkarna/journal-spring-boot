@@ -41,4 +41,22 @@ public class SpringSecurityProd {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public org.springframework.web.servlet.config.annotation.WebMvcConfigurer corsConfigurer() {
+        return new org.springframework.web.servlet.config.annotation.WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins(
+                            "http://localhost:5173",
+                            "http://127.0.0.1:5173",
+                            "https://crynza-frontend.onrender.com" // <-- Replace with your actual Render frontend URL
+                            // "https://crynza.com" // <-- Add your custom domain here if you have one
+                        )
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
+    }
 }

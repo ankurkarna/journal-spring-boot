@@ -20,9 +20,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @Profile("dev")
 @RequiredArgsConstructor
 public class SpringSecurity {
@@ -32,22 +34,23 @@ public class SpringSecurity {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-//    public SpringSecurity(JwtAuthenticationFilter jwtAuthenticationFilter) {
-//        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-//    }
+    // public SpringSecurity(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    // this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    // }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//
-//        return http.authorizeHttpRequests(request -> request
-//                        .requestMatchers("/public/**","/health/**").permitAll()
-//                        .requestMatchers("/journal/**" ,"/user/**").authenticated()
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .anyRequest().authenticated())
-//                .httpBasic(Customizer.withDefaults())
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .build();
-//    }
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
+    // Exception {
+    //
+    // return http.authorizeHttpRequests(request -> request
+    // .requestMatchers("/public/**","/health/**").permitAll()
+    // .requestMatchers("/journal/**" ,"/user/**").authenticated()
+    // .requestMatchers("/admin/**").hasRole("ADMIN")
+    // .anyRequest().authenticated())
+    // .httpBasic(Customizer.withDefaults())
+    // .csrf(AbstractHttpConfigurer::disable)
+    // .build();
+    // }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -60,10 +63,10 @@ public class SpringSecurity {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/webjars/**").permitAll()
+                                "/webjars/**")
+                        .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -85,7 +88,7 @@ public class SpringSecurity {
         return new BCryptPasswordEncoder();
     }
 
-    //  Add this CORS configuration bean
+    // Add this CORS configuration bean
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

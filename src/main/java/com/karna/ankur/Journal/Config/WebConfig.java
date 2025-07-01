@@ -13,7 +13,13 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173") // your Vite dev server
+                        .allowedOrigins(
+                                "http://localhost:5173", // Vite dev (localhost)
+                                "http://127.0.0.1:5173", // Vite dev (127.0.0.1)
+                                "https://crynza-frontend.onrender.com" // <-- Replace with your actual Render frontend
+                                                                       // URL
+                // "https://crynza.com" // <-- Add your custom domain here if you have one
+                )
                         .allowedMethods("*")
                         .allowedHeaders("*");
             }

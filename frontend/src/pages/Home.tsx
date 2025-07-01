@@ -211,6 +211,11 @@ const Home = () => {
           </a>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="w-full text-center py-4 text-gray-400 text-sm mt-auto">
+        Created with <span className="text-red-500">❤️</span> by Ankur
+      </footer>
     </div>
   );
 };

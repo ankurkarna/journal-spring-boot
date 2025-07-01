@@ -5,12 +5,14 @@ import com.karna.ankur.Journal.Repository.UserRepository;
 import com.karna.ankur.Journal.Service.UserService;
 import com.karna.ankur.Journal.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/public")
@@ -29,8 +31,8 @@ public class PublicController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-
     }
+
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
@@ -47,6 +49,7 @@ public class PublicController {
         // Encrypt the password before saving
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
         signUpRequest.setPassword(encodedPassword);
+        signUpRequest.setRoles(Collections.singletonList("USER"));
 
         // Save new user
         UserEntity savedUser = userRepository.save(signUpRequest);
@@ -55,7 +58,6 @@ public class PublicController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody UserEntity loginRequest) {
         UserEntity user = userRepository.findByUserName(loginRequest.getUserName());
@@ -63,16 +65,15 @@ public class PublicController {
         if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             String token = jwtUtil.generateToken(user.getUserName());
             System.out.println("Entered Password: " + loginRequest.getPassword());
-        System.out.println("Encoded Password in DB: " + user.getPassword());
-        System.out.println("Password matches: " + passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()));
+            System.out.println("Encoded Password in DB: " + user.getPassword());
+            System.out.println(
+                    "Password matches: " + passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()));
             return ResponseEntity.ok().body("JWT Token: " + token);
 
         } else {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
 
-
     }
 
 }
-

@@ -1,5 +1,4 @@
 spring:
-
   data:
     mongodb:
       uri: mongodb+srv://ankurkarna:xV4s5CCSJJQEjnQz@cluster0.ih67exj.mongodb.net/journaldb?retryWrites=true&w=majority&appName=Cluster0
@@ -11,7 +10,6 @@ spring:
       username: default
       password: 0zFzgb2c2j9ARV2RAeMYnE9xEWfcrvBt
 
-
   application:
     name: Journal
 
@@ -19,18 +17,17 @@ spring:
     allow-circular-references: true
     allow-bean-definition-overriding: true
   kafka:
-      bootstrap-servers: localhost:9092
-      consumer:
-        group-id: weekly-sentiment-group
-        auto-offset-reset: earliest
-        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-        properties:
-          spring.json.trusted.packages: "*"
-      producer:
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: weekly-sentiment-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   mail:
     host: smtp.gmail.com

@@ -31,7 +31,7 @@ public class WeatherService {
         log.info("Using cache key: '{}'", cacheKey);
         WeatherResponse weatherResponse = redisService.get(cacheKey, WeatherResponse.class);
 
-        WeatherResponse cachedResponse = redisService.get(cacheKey, WeatherResponse.class);
+        // WeatherResponse cachedResponse = redisService.get(cacheKey, WeatherResponse.class);
         if (weatherResponse != null) {
             log.info("Cache HIT for key: {}", cacheKey);
             return weatherResponse;
@@ -53,7 +53,7 @@ public class WeatherService {
             WeatherResponse body = response.getBody();
             if (body != null) {
                 log.info("Caching weather data for {}", city);
-                redisService.set(cacheKey, body, 300L);
+                redisService.set(cacheKey, body, 604800L);
             }
             return body;
         }
