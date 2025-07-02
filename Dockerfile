@@ -23,7 +23,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=30s --retries=3 \
 
 EXPOSE 8080
 
-# Optimize JVM for container environment with aggressive settings
-ENV JAVA_OPTS="-Xmx256m -Xms128m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dspring.profiles.active=prod"
+# Optimize JVM for container environment with safe settings
+ENV JAVA_OPTS="-Xmx256m -Xms128m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxGCPauseMillis=200 -Dspring.profiles.active=prod"
 
 ENTRYPOINT ["/app/startup.sh"]
