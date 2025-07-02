@@ -9,5 +9,7 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      - key: JAVA_OPTS
+        value: "-Xmx256m -Xms128m -XX:+UseG1GC -XX:+UseContainerSupport -Dspring.profiles.active=prod"
     buildCommand: mvn clean package -DskipTests
-    startCommand: java -Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport -jar target/*.jar
+    startCommand: java -Xmx256m -Xms128m -XX:+UseG1GC -XX:+UseContainerSupport -Dspring.profiles.active=prod -jar target/*.jar
