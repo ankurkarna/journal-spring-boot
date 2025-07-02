@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 const Signup: React.FC = () => {
@@ -154,9 +154,9 @@ const Signup: React.FC = () => {
           </form>
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <a href="/signin" className="text-indigo-600 hover:underline">
+            <Link to="/signin" className="text-indigo-600 hover:underline">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 // Example: Fetch user journals
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
+import { Link } from "react-router-dom";
 
 interface Entry {
   id: string;
@@ -52,12 +53,12 @@ const Journal: React.FC = () => {
             </svg>
           </span>
           <div>
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-4xl font-bold text-gray-700 hover:text-indigo-600 transition-colors"
             >
               Crynza
-            </a>
+            </Link>
             <div className="text-xs text-gray-500 font-medium mt-1">
               Your mind. Your words. Your space.
             </div>

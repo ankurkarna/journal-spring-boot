@@ -1,6 +1,7 @@
 // src/pages/Home.tsx
 
 import "./Home.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   // Homepage is always accessible
@@ -196,18 +197,18 @@ const Home = () => {
         </div>
         {/* Call to Action Buttons */}
         <div className="flex space-x-4 justify-center">
-          <a
-            href="/signup"
+          <Link
+            to="/signup"
             className="px-6 py-3 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-700 transition"
           >
             Get Started
-          </a>
-          <a
-            href="/signin"
+          </Link>
+          <Link
+            to="/signin"
             className="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 font-semibold shadow hover:bg-gray-300 transition"
           >
             Sign In
-          </a>
+          </Link>
         </div>
       </section>
 
