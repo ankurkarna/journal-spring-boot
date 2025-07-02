@@ -8,8 +8,12 @@ const Signin: React.FC = () => {
     userName: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const API_BASE = import.meta.env.VITE_API_URL;
+
+  // Debug: Log the API URL to console
+  console.log("Signin API_BASE:", API_BASE);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,22 +31,46 @@ const Signin: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
+      console.log("Sending signin request to:", `${API_BASE}/public/signin`);
+      console.log("Credentials:", {
+        userName: credentials.userName,
+        password: "***",
+      });
+
       const res = await axios.post(`${API_BASE}/public/signin`, credentials);
 
-      const data = res.data;
+      console.log("Signin response:", res.data);
 
       if (res.status === 200) {
+        const data = res.data;
         const token = data.replace("JWT Token: ", "").trim();
         localStorage.setItem("token", token);
-        //         alert("Signin successful");
+        console.log("Token stored successfully");
         navigate("/dashboard");
       } else {
         alert("Invalid credentials");
       }
-    } catch (err) {
-      console.error(err);
-      alert("Error during signin");
+    } catch (err: any) {
+      console.error("Signin error:", err);
+
+      if (err.response) {
+        console.error("Response data:", err.response.data);
+        console.error("Response status:", err.response.status);
+        alert(`Signin failed: ${err.response.data || "Invalid credentials"}`);
+      } else if (err.request) {
+        console.error("No response received:", err.request);
+        alert(
+          "No response from server. Please check your internet connection and try again."
+        );
+      } else {
+        console.error("Error setting up request:", err.message);
+        alert("Error: " + err.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,6 +120,16 @@ const Signin: React.FC = () => {
         </div>
       </header>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        {/* Debug section - remove this after fixing */}
+        {!API_BASE && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <strong>Debug:</strong> VITE_API_URL is not set. Please check your
+            environment variables.
+            <br />
+            Current value: {API_BASE || "undefined"}
+          </div>
+        )}
+
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded shadow-md w-96"
@@ -118,9 +156,10 @@ const Signin: React.FC = () => {
           />
           <button
             type="submit"
-            className="bg-green-600 text-white py-2 px-4 rounded w-full hover:bg-green-700"
+            disabled={isLoading}
+            className="bg-green-600 text-white py-2 px-4 rounded w-full hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
       </div>

@@ -53,6 +53,9 @@ function getTodayKey(key: string) {
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
+// Debug: Log the API URL to console
+console.log("Dashboard API_BASE:", API_BASE);
+
 const Dashboard: React.FC = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [activeTab, setActiveTab] = useState("entries");

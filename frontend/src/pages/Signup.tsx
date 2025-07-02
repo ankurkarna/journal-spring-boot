@@ -6,44 +6,57 @@ const Signup: React.FC = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [sentimentAnalysis, setSentimentAnalysis] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const API_BASE = import.meta.env.VITE_API_URL;
 
+  // Debug: Log the API URL to console
+  console.log("API_BASE:", API_BASE);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
+      // Only send the fields that the backend expects
       const payload = {
         userName,
         password,
-        email,
-        sentimentAnalysis,
+        email: email || null, // Make email optional
       };
 
-      await axios.post(`${API_BASE}/public/signup`, payload, {
+      console.log("Sending signup request to:", `${API_BASE}/public/signup`);
+      console.log("Payload:", payload);
+
+      const response = await axios.post(`${API_BASE}/public/signup`, payload, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+
+      console.log("Signup response:", response.data);
+      alert("Account created successfully! Please sign in.");
       navigate("/signin");
     } catch (err: any) {
+      console.error("Signup error:", err);
+
       if (err.response) {
-        console.error("Signup failed:", err.response.data);
-        alert(
-          `Signup failed: ${
-            err.response.data.message || JSON.stringify(err.response.data)
-          }`
-        );
+        console.error("Response data:", err.response.data);
+        console.error("Response status:", err.response.status);
+        alert(`Signup failed: ${err.response.data || "Unknown error"}`);
       } else if (err.request) {
         console.error("No response received:", err.request);
-        alert("No response from server. Check network/CORS.");
+        alert(
+          "No response from server. Please check your internet connection and try again."
+        );
       } else {
         console.error("Error setting up request:", err.message);
         alert("Error: " + err.message);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -93,6 +106,16 @@ const Signup: React.FC = () => {
         </div>
       </header>
       <div className="min-h-screen bg-gradient-to-tr from-indigo-100 to-white flex items-center justify-center px-4">
+        {/* Debug section - remove this after fixing */}
+        {!API_BASE && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <strong>Debug:</strong> VITE_API_URL is not set. Please check your
+            environment variables.
+            <br />
+            Current value: {API_BASE || "undefined"}
+          </div>
+        )}
+
         <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md space-y-6">
           <h2 className="text-2xl font-bold text-center text-gray-800">
             Create Account
@@ -121,25 +144,12 @@ const Signup: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
-            <div className="flex items-center justify-between">
-              <span className="text-gray-700 text-sm">
-                Enable Sentiment Analysis?
-              </span>
-              <label className="inline-flex relative items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={sentimentAnalysis}
-                  onChange={(e) => setSentimentAnalysis(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-400 rounded-full peer dark:bg-gray-600 peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-              </label>
-            </div>
             <button
               type="submit"
-              className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
+              disabled={isLoading}
+              className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign Up
+              {isLoading ? "Creating Account..." : "Sign Up"}
             </button>
           </form>
           <p className="text-sm text-center text-gray-600">
