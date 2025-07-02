@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import EntryInputBox from "../components/EntryInputBox";
+import mountainBanner from "../assets/mountain_dash1.jpg";
 
 interface Entry {
   id: string;
@@ -333,7 +334,7 @@ const Dashboard: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 mt-4">
         <div className="w-full h-48 overflow-hidden rounded shadow-lg group">
           <img
-            src="/src/assets/mountain_dash1.jpg"
+            src={mountainBanner}
             alt="Mountain Banner"
             className="w-full h-full object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-105"
           />
