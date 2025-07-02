@@ -16,9 +16,7 @@ public class WebConfig {
                         .allowedOrigins(
                                 "http://localhost:5173", // Vite dev (localhost)
                                 "http://127.0.0.1:5173", // Vite dev (127.0.0.1)
-                                "https://crynza-frontend.onrender.com" // <-- Replace with your actual Render frontend
-                                                                       // URL
-                // "https://crynza.com" // <-- Add your custom domain here if you have one
+                                "https://crynza-journal-application.onrender.com" // <-- Actual deployed frontend URL
                 )
                         .allowedMethods("*")
                         .allowedHeaders("*");
