@@ -16,7 +16,7 @@ public class WebConfig {
                         .allowedOrigins(
                                 "http://localhost:5173", // Vite dev (localhost)
                                 "http://127.0.0.1:5173", // Vite dev (127.0.0.1)
-                                "https://crynza-journal-application.onrender.com" // <-- Actual deployed frontend URL
+                                "https://journal-faiz.onrender.com" // <-- Actual deployed frontend URL
                 )
                         .allowedMethods("*")
                         .allowedHeaders("*");
